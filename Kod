@@ -1,0 +1,140 @@
+namespace Biblioteka_Projekt
+{
+}
+   class Book
+{
+    public string Tytuł { get; set; }
+    public string Autor { get; set; }
+    public bool IsAvailable { get; set; }
+    public Book(string tytuł, string autor, bool isAvaiable = true)
+    {
+        Tytuł = tytuł;
+        Autor = autor;
+        IsAvailable = isAvaiable;
+    }
+}
+   class Biblioteka
+{
+    private List<Book> books;
+    public Biblioteka()
+    {
+        books = new List<Book>();
+        books.Add(new Book("Harry Potter i Kamień Filozoficzny", "J.K. Rowling"));
+        books.Add(new Book("Wiedźmin: Ostatnie życzenie", "Andrzej Sapkowski"));
+        books.Add(new Book("Chłopi", "Władysław Stanisław Reymont"));
+        books.Add(new Book("Elon Musk. Biografia twórcy Paypala, Tesli, SpaceX", "Vance Ashlee"));
+        books.Add(new Book("Kabalista", "Remigiusz Mróz"));
+    }
+    public List<Book> GetAvailableBooks()
+    {
+        List<Book> availableBooks = new List<Book>();
+        foreach (Book book in books)
+        {
+            if (book.IsAvailable)
+            {
+                availableBooks.Add(book);
+            }
+        }
+        return availableBooks;
+    }
+    public void BorrowBook(string tytuł, string autor) 
+    {
+        foreach (Book book in books)
+        {
+            if (book.Tytuł == tytuł &&  book.Autor == autor)
+            {
+                if (book.IsAvailable)
+                {
+                    book.IsAvailable = false;
+                    Console.WriteLine("Książka została wypożyczona");
+                }
+                else
+                {
+                    Console.WriteLine("Książka jest już wypożyczona");
+                }
+                return;
+            }
+        }
+        Console.WriteLine("Nie znaleziono książki o podanym tytule i autorze");
+    }
+    public void ReturnBook(string tytuł,string autor)
+    {
+        foreach (Book book in books)
+        {
+            if (book.Tytuł == tytuł && book.Autor == autor)
+            {
+                if (book.IsAvailable)
+                {
+                    Console.WriteLine("Nie wypożyczyłeś tej książki");
+                }
+                else
+                {
+                    book.IsAvailable = true;
+                    Console.WriteLine("Książka została oddana");
+                }
+                return;
+            }
+        }
+        Console.WriteLine("Nie znaleziono książki o podanym tytule i autorze");
+    }
+}
+    class Program
+{
+    static void Main(string[] args)
+    {
+        Biblioteka biblioteka = new Biblioteka();
+        while (true)
+        {
+            Console.WriteLine("\nWitaj w bibliotece!\n");
+            Console.WriteLine("Co chcesz zrobić?");
+            Console.WriteLine("1. Wyświetl dostępne książki");
+            Console.WriteLine("2. Wypożycz książkę");
+            Console.WriteLine("3. Oddaj książkę");
+            Console.WriteLine("4. Wyjście");
+
+            string choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    List<Book> availableBooks = biblioteka.GetAvailableBooks();
+                    if (availableBooks.Count == 0)
+                    {
+                        Console.WriteLine("Brak dostępnych książek");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Dostępne książki:");
+                        foreach (Book book in availableBooks)
+                        {
+                            Console.WriteLine("{0} - {1}", book.Tytuł, book.Autor);
+                        }
+                    }
+                    break;
+                    case "2":
+                    Console.WriteLine("Podaj tytuł książki:");
+                    string borrowTitle = Console.ReadLine();
+                    Console.WriteLine("Podaj autora książki:");
+                    string borrowAuthor = Console.ReadLine();
+                    biblioteka.BorrowBook(borrowTitle, borrowAuthor);
+                    break;
+                    case "3":
+                    Console.WriteLine("Podaj tytuł książki:");
+                    string returnTitle = Console.ReadLine();
+                    Console.WriteLine("Podaj autora książki:");
+                    string returnAuthor = Console.ReadLine();
+                    biblioteka.ReturnBook(returnTitle, returnAuthor);
+                    break;
+                    case "4":
+                    Console.WriteLine("Do zobaczenia!");
+                    return;
+                default:
+                    Console.WriteLine("Nieprawidłowy wybór");
+                    break;
+
+            }
+        }
+    }
+}
+
+
+
